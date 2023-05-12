@@ -1,12 +1,15 @@
 package WorldSimulator;
 
-public abstract class Organism
+import java.awt.*;
+
+public abstract class Organism implements Cloneable
 {
     protected Vector2 pos = new Vector2();
     protected Vector2 prevPos = new Vector2();
     protected int priority = 0;
     protected int strength = 0;
     protected char symbol = 0;
+    protected Color color = new Color(0,0,0);
     protected boolean isAlive = true;
     protected World world = null;
 
@@ -49,6 +52,11 @@ public abstract class Organism
         return symbol;
     }
 
+    public Color getColor()
+    {
+        return color;
+    }
+
     public boolean isAlive()
     {
         return isAlive;
@@ -73,7 +81,6 @@ public abstract class Organism
         pos = prevPos;
     }
 
-    protected abstract Organism Clone(Vector2 pos);
     @Override
     public abstract String toString();
 
@@ -99,5 +106,20 @@ public abstract class Organism
 
         isAlive = false;
         world.AddLog(this + " [" + getStrength() + "] was killed by " + killer + " [" + killer.getStrength() + "]\n");
+    }
+
+    @Override
+    public Organism clone()
+    {
+        try
+        {
+            Organism clone = (Organism) super.clone();
+
+            return clone;
+        }
+        catch (CloneNotSupportedException e)
+        {
+            throw new AssertionError();
+        }
     }
 }

@@ -6,7 +6,7 @@ public class World
 {
 
     private Vector2 size;
-    private Vector<Organism> organisms;
+    private Vector<Organism> organisms = new Vector<>();
     private int turnNumber = 0;
     private boolean playerAlive = true;
     private String logs;

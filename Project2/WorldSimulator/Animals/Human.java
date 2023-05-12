@@ -12,12 +12,6 @@ public class Human extends Animal
     }
 
     @Override
-    protected Organism Clone(Vector2 pos)
-    {
-        return new Human(pos);
-    }
-
-    @Override
     public String toString()
     {
         return "Human";

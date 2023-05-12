@@ -9,11 +9,17 @@ public class Game
 
     public Game(int height, int width)
     {
+        world = new World(height, width);
         player = new Human(new Vector2( height / 2, width / 2 ));
         world.AddOrganism(player);
         GenerateWorld();
         DrawMenu();
         world.DrawWorld();
+    }
+
+    public World getWorld()
+    {
+        return world;
     }
 
     public void GenerateWorld()

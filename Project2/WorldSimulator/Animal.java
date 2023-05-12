@@ -69,7 +69,8 @@ public abstract class Animal extends Organism
         }
 
         Vector2 childPos = world.GetEmptyNeighbor(other.getPos());
-        Animal child = (Animal)Clone(childPos);
+        Animal child = (Animal)clone();
+        child.pos = childPos;
         world.AddOrganism(child);
 
         currentBreedingCooldown = breedingCooldown;
@@ -78,6 +79,4 @@ public abstract class Animal extends Organism
 
         world.AddLog( "Breeding on " + child.pos + "\n");
     }
-
-
 }
