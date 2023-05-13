@@ -8,18 +8,19 @@ public abstract class Organism implements Cloneable
     protected Vector2 prevPos = new Vector2();
     protected int priority = 0;
     protected int strength = 0;
-    protected char symbol = 0;
-    protected Color color = new Color(0,0,0);
+    protected final char symbol;
+    protected final Color color;
     protected boolean isAlive = true;
     protected World world = null;
 
 
-    public Organism(Vector2 pos, int priority, int strength, char symbol)
+    public Organism(Vector2 pos, int priority, int strength, char symbol, Color color)
     {
         this.pos = pos;
         this.priority = priority;
         this.strength = strength;
         this.symbol = symbol;
+        this.color = color;
     }
 
     public Vector2 getPos()

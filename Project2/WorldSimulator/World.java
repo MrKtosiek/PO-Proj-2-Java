@@ -5,19 +5,19 @@ import java.util.*;
 public class World
 {
 
-    private Vector2 size;
+    private final Vector2 size;
     private Vector<Organism> organisms = new Vector<>();
     private int turnNumber = 0;
     private boolean playerAlive = true;
-    private String logs;
+    private ArrayList<String> logs = new ArrayList<>();
 
     public World()
     {
         this(15, 15);
     }
-    public World(int height, int width)
+    public World(int width, int height)
     {
-        size = new Vector2(height, width);
+        size = new Vector2(width, height);
     }
     public World(World orig)
     {
@@ -76,7 +76,7 @@ public class World
 
     public void AddLog(String str)
     {
-        logs += str;
+        logs.add(str);
     }
 
     public boolean IsPlayerAlive()
@@ -177,48 +177,15 @@ public class World
         }
 
 
-        logs += "Turn " + ++turnNumber + " finished\n";
+        AddLog("Turn " + ++turnNumber + " finished\n");
     }
 
-    public void DrawWorld()
+    public ArrayList<String> getLogs()
     {
-        // create a buffer for the drawing
-        char[][] buffer = new char[size.x][size.y];
-        for (int x = 0; x < size.x; x++)
-        {
-            for (int y = 0; y < size.y; y++)
-            {
-                buffer[x][y] = ' ';
-            }
-        }
-
-        // draw all organisms
-        for (Organism org : organisms)
-        {
-            org.Draw(buffer);
-        }
-
-        // draw the buffer on the console
-        for (int x = 0; x < size.x; x++)
-        {
-            System.out.print('|');
-            System.out.print(' ');
-            for (int y = 0; y < size.y; y++)
-            {
-                System.out.print(buffer[x][y]);
-                System.out.print(' ');
-            }
-            System.out.print("|\n");
-        }
+        return logs;
     }
-
-    public void DrawLogs()
-    {
-        System.out.println(" --- Logs: ---\n\n" + logs);
-    }
-
     public void ClearLogs()
     {
-        logs = new String();
+        logs.clear();
     }
 }

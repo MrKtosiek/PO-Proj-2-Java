@@ -1,14 +1,15 @@
 package WorldSimulator;
 
+import java.awt.*;
 import java.util.Random;
 
 public abstract class Plant extends Organism
 {
     public int growChance;
 
-    public Plant(Vector2 pos, int strength, int growChance, char symbol)
+    public Plant(Vector2 pos, int strength, int growChance, char symbol, Color color)
     {
-        super(pos, 0, strength, symbol);
+        super(pos, 0, strength, symbol, color);
         this.growChance = growChance;
     }
 

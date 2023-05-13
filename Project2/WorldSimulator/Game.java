@@ -4,17 +4,15 @@ import WorldSimulator.Animals.Human;
 
 public class Game
 {
-    private World world;
-    private Human player;
+    private final World world;
+    private final Human player;
 
-    public Game(int height, int width)
+    public Game(int width, int height)
     {
-        world = new World(height, width);
-        player = new Human(new Vector2( height / 2, width / 2 ));
+        world = new World(width, height);
+        player = new Human(new Vector2( width / 2, height / 2 ));
         world.AddOrganism(player);
         GenerateWorld();
-        DrawMenu();
-        world.DrawWorld();
     }
 
     public World getWorld()
