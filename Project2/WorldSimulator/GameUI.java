@@ -1,9 +1,7 @@
 package WorldSimulator;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.time.chrono.JapaneseEra;
 import java.util.ArrayList;
 
 public class GameUI
@@ -15,15 +13,12 @@ public class GameUI
 
     private static final int tileSize = 20;
 
-    public GameUI(Game game)
+    public GameUI(Game game, String title, int width, int height)
     {
         this.game = game;
-        frame = new JFrame();
-    }
 
-    public void CreateAndShowWindow(String title, int width, int height)
-    {
         // create the window
+        frame = new JFrame();
         frame.setTitle(title);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setPreferredSize(new Dimension(width, height));
@@ -38,7 +33,12 @@ public class GameUI
         // display the window
         frame.pack();
         frame.setVisible(true);
+        frame.setFocusable(true);
+        frame.addKeyListener(new GameController(game, this));
+
+        frame.requestFocus();
     }
+
     private void CreateGrid(JPanel container)
     {
         JPanel gridHolder = new JPanel();
@@ -86,7 +86,7 @@ public class GameUI
         container.add(logHolder);
     }
 
-    public void DrawWorld()
+    public void DrawOrganisms()
     {
         Vector2 worldSize = game.getWorld().GetSize();
 
@@ -96,6 +96,7 @@ public class GameUI
             for (int y = 0; y < worldSize.y; y++)
             {
                 tiles[x][y].setText(" ");
+                tiles[x][y].setBackground(Color.LIGHT_GRAY);
             }
         }
 

@@ -85,7 +85,7 @@ public abstract class Organism implements Cloneable
     @Override
     public abstract String toString();
 
-    protected void Hit(Animal attacker)
+    protected void Hit(Organism attacker)
     {
         world.AddLog(attacker + " attacked " + this + " on " + pos + "\n");
         if (attacker.getStrength() >= getStrength())

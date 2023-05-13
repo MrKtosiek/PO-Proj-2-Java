@@ -20,13 +20,23 @@ public class Game
         return world;
     }
 
+    public Human getPlayer()
+    {
+        return player;
+    }
+
     public void GenerateWorld()
     {
 
     }
-    public void SimulateWorld(char input)
+    public void SimulateWorld(int input)
     {
+        if (world.IsPlayerAlive())
+            player.setNextAction(input);
 
+        world.ClearLogs();
+        world.ExecuteTurn();
+        
     }
     public void SaveWorld()
     {

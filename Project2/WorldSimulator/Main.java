@@ -15,11 +15,9 @@ public class Main
         //worldSize.y = scanner.nextInt();
 
         Game game = new Game(worldSize.x, worldSize.y);
+        GameUI gameUI = new GameUI(game, "Filip Jezierski 196333", 800, 400);
 
-        GameUI gameUI = new GameUI(game);
-        gameUI.CreateAndShowWindow("Filip Jezierski 196333", 800, 400);
-
-        gameUI.DrawWorld();
+        gameUI.DrawOrganisms();
     }
 
 }

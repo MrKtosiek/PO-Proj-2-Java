@@ -21,13 +21,13 @@ public abstract class Animal extends Organism
         currentBreedingCooldown--;
     }
 
-    private void Movement()
+    protected void Movement()
     {
         Random rand = new Random();
         MoveTo(pos.GetNeighbor(rand.nextInt(4)));
     }
 
-    private void MoveTo(Vector2 target)
+    protected void MoveTo(Vector2 target)
     {
         if (world.ContainsPos(target))
         {
