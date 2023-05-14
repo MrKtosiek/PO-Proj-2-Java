@@ -5,12 +5,13 @@ import java.util.Random;
 
 public abstract class Animal extends Organism
 {
-    private int breedingCooldown;
+    private final int breedingCooldown;
     private int currentBreedingCooldown;
 
-    public Animal(Vector2 pos, int priority, int strength, char symbol, Color color)
+    public Animal(Vector2 pos, int priority, int strength, int breedingCooldown, char symbol, Color color)
     {
         super(pos, priority, strength, symbol, color);
+        this.breedingCooldown = breedingCooldown;
     }
 
     @Override

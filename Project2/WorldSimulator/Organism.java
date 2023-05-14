@@ -68,16 +68,11 @@ public abstract class Organism implements Cloneable
         this.world = world;
     }
 
-    public void Draw(char[][] buffer)
-    {
-        buffer[pos.x][pos.y] = getSymbol();
-    }
-
     public abstract void Action();
 
     public abstract void Collide(Organism organism);
 
-    protected void GoBack()
+    public void GoBack()
     {
         pos = prevPos;
     }
@@ -100,7 +95,7 @@ public abstract class Organism implements Cloneable
         }
     }
 
-    protected void Die(Organism killer)
+    public void Die(Organism killer)
     {
         if (!isAlive)
             return;

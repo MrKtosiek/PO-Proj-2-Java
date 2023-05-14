@@ -26,7 +26,7 @@ public class Human extends Animal
     int abilityLeft = 0;
     public Human(Vector2 pos)
     {
-        super(pos, 4, 5, 'H', Color.CYAN);
+        super(pos, 4, 5, 0, 'H', new Color(0, 255, 255));
     }
 
     public boolean IsAbilityActive()
@@ -125,7 +125,7 @@ public class Human extends Animal
     }
 
     @Override
-    protected void Die(Organism killer)
+    public void Die(Organism killer)
     {
         world.SetPlayerAlive(false);
         super.Die(killer);

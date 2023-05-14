@@ -49,7 +49,7 @@ public class World
     {
         for (Organism organism : organisms)
         {
-            if (pos == organism.getPos())
+            if (pos.equals(organism.getPos()))
                 return organism;
         }
         return null;
@@ -154,13 +154,12 @@ public class World
             if (!organisms.get(i).isAlive())
                 continue;
 
-            //world->Logs() << i + 1 << ". ";
             organisms.get(i).Action();
 
             // handle collisions
             for (int j = 0; j < organisms.size(); j++)
             {
-                if (i != j && organisms.get(j).isAlive() && organisms.get(i).getPos() == organisms.get(j).getPos())
+                if (i != j && organisms.get(j).isAlive() && organisms.get(i).getPos().equals(organisms.get(j).getPos()))
                 {
                     organisms.get(i).Collide(organisms.get(j));
                 }
