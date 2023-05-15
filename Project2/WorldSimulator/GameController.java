@@ -22,7 +22,6 @@ public class GameController implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e)
     {
-        //System.out.println("Key pressed: " + e.getKeyChar());
         game.SimulateWorld(e.getKeyCode());
         gameUI.DrawOrganisms();
         gameUI.WriteLogs();

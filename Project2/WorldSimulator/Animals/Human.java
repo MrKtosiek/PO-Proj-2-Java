@@ -63,7 +63,7 @@ public class Human extends Animal
             case KeyEvent.VK_S -> nextAction = HumanAction.DOWN;
             case KeyEvent.VK_A -> nextAction = HumanAction.LEFT;
             case KeyEvent.VK_D -> nextAction = HumanAction.RIGHT;
-            case KeyEvent.VK_E -> nextAction = HumanAction.ABILITY;
+            case KeyEvent.VK_R -> nextAction = HumanAction.ABILITY;
             default -> nextAction = HumanAction.NONE;
         }
     }

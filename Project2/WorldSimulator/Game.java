@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class Game
 {
     private World world;
-    private final Human player;
+    private Human player;
 
     public Game(int width, int height)
     {
@@ -118,8 +118,10 @@ public class Game
             {
                 fileWriter.write(org.getSymbol() + " " + org.getPos().x + " " + org.getPos().y + " " + org.getStrength());
 
-                if (org instanceof Human)
-                    fileWriter.write(((Human)org).getAbilityDurationLeft());
+                if (org instanceof Human){
+                    System.out.println("Writing human");
+                    fileWriter.write(" " + ((Human)org).getAbilityDurationLeft());
+                }
 
                 fileWriter.write(System.lineSeparator());
             }
@@ -161,14 +163,11 @@ public class Game
                 Vector2 pos = new Vector2();
                 int strength;
 
-                String line = scanner.next();
-
-                symbol = line.charAt(0);
+                symbol = scanner.next().charAt(0);
                 System.out.println(symbol);
-                Scanner lineScanner = new Scanner(line);
-                pos.x = lineScanner.nextInt();
-                pos.y = lineScanner.nextInt();
-                strength = lineScanner.nextInt();
+                pos.x = scanner.nextInt();
+                pos.y = scanner.nextInt();
+                strength = scanner.nextInt();
 
                 switch (symbol)
                 {
@@ -178,6 +177,7 @@ public class Game
                         int ability = scanner.nextInt();
                         newHuman.setAbilityDurationLeft(ability);
                         newHuman.strength = strength;
+                        player = newHuman;
                         world.AddOrganism(newHuman);
                     }
                     case 'W' ->
@@ -254,5 +254,38 @@ public class Game
             e.printStackTrace();
         }
 
+    }
+
+
+    public Organism CreateOrganism(char symbol, Vector2 pos)
+    {
+        switch (symbol)
+        {
+            case 'H':
+                return new Human(pos);
+            case 'W':
+                return new Wolf(pos);
+            case 'S':
+                return new Sheep(pos);
+            case 'F':
+                return new Fox(pos);
+            case 'T':
+                return new Turtle(pos);
+            case 'A':
+                return new Antelope(pos);
+            case ',':
+                return new Grass(pos);
+            case 'm':
+                return new Dandelion(pos);
+            case 'g':
+                return new Guarana(pos);
+            case '?':
+                return new Belladonna(pos);
+            case '%':
+                return new Heracleum(pos);
+            default:
+                System.out.println("Unknown organism symbol '" + symbol + "'");
+                return null;
+        }
     }
 }
