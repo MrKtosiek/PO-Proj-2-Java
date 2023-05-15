@@ -35,7 +35,7 @@ public class Antelope extends Animal
         Vector2 target = pos;
         for (int i = 0; i < motionRange; i++)
         {
-            target = target.GetNeighbor(rand.nextInt() % 4);
+            target = target.GetNeighbor(rand.nextInt(4));
         }
         MoveTo(target);
     }

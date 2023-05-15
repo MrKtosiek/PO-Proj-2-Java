@@ -2,6 +2,8 @@ package WorldSimulator;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class GameUI
@@ -12,8 +14,13 @@ public class GameUI
     private JLabel logText;
 
     private static final int tileSize = 20;
+    private static final int margin = 10;
+    private static final int logWidth = 350;
+    private static final int logHeight = 400;
+    private static final int buttonHeight = 20;
+    private static final int buttonWidth = 100;
 
-    public GameUI(Game game, String title, int width, int height)
+    public GameUI(Game game, String title)
     {
         this.game = game;
 
@@ -21,48 +28,49 @@ public class GameUI
         frame = new JFrame();
         frame.setTitle(title);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setPreferredSize(new Dimension(width, height));
+        frame.setPreferredSize(new Dimension(
+                game.getWorld().GetSize().y * tileSize + logWidth + margin * 3,
+                Math.max(game.getWorld().GetSize().x * tileSize, logHeight) + margin * 2 + buttonHeight + 50));
 
         JPanel container = new JPanel();
-        container.setLayout(new BoxLayout(container, BoxLayout.X_AXIS));
+        container.setLayout(null);
         frame.add(container);
 
+        // add UI elements
         CreateGrid(container);
         CreateLog(container);
+        AddButtons(container);
 
         // display the window
         frame.pack();
         frame.setVisible(true);
-        frame.setFocusable(true);
-        frame.addKeyListener(new GameController(game, this));
 
+        frame.addKeyListener(new GameController(game, this));
+        frame.setFocusable(true);
         frame.requestFocus();
     }
 
     private void CreateGrid(JPanel container)
     {
-        JPanel gridHolder = new JPanel();
-
         // create the tiles
         Vector2 worldSize = game.getWorld().GetSize();
         tiles = new JLabel[worldSize.x][worldSize.y];
         JPanel grid = new JPanel();
-        grid.setLayout(new GridLayout(worldSize.y, worldSize.x));
-        grid.setPreferredSize(new Dimension(worldSize.x * tileSize, worldSize.y * tileSize));
-        grid.setBorder(BorderFactory.createLineBorder(Color.RED));
+        grid.setLayout(null);
+        grid.setBounds(margin, buttonHeight + margin, worldSize.y * tileSize, worldSize.x * tileSize);
 
         for (int x = 0; x < worldSize.x; x++)
         {
             for (int y = 0; y < worldSize.y; y++)
             {
                 JLabel tile = CreateTile();
+                tile.setBounds(y * tileSize, x * tileSize, tileSize, tileSize);
                 tiles[x][y] = tile;
                 grid.add(tile);
             }
         }
 
-        gridHolder.add(grid);
-        container.add(gridHolder);
+        container.add(grid);
     }
     private JLabel CreateTile()
     {
@@ -76,14 +84,41 @@ public class GameUI
     }
     private void CreateLog(JPanel container)
     {
-        JPanel logHolder = new JPanel();
         JLabel log = new JLabel();
-        log.setBorder(BorderFactory.createLineBorder(Color.BLUE));
         log.setAlignmentY(Component.TOP_ALIGNMENT);
-        log.setText("<html>Logs:</html>");
+        log.setVerticalTextPosition(SwingConstants.TOP);
+        log.setVerticalAlignment(SwingConstants.TOP);
+        log.setText(" ");
         logText = log;
-        logHolder.add(log);
-        container.add(logHolder);
+
+        JScrollPane sp = new JScrollPane(log);
+        sp.setBorder(BorderFactory.createTitledBorder("Logs"));
+        sp.setBounds(game.getWorld().GetSize().y * tileSize + 2 * margin, buttonHeight + margin, logWidth, logHeight);
+        sp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        sp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+        container.add(sp);
+    }
+    private void AddButtons(JPanel container)
+    {
+        JButton saveButton = new JButton("Save");
+        saveButton.setBounds(0, 0, buttonWidth, buttonHeight);
+        saveButton.setFocusable(false);
+        container.add(saveButton);
+
+        JButton loadButton = new JButton("Load");
+        loadButton.setBounds(buttonWidth, 0, buttonWidth, buttonHeight);
+        loadButton.setFocusable(false);
+        container.add(loadButton);
+
+        saveButton.addActionListener(e ->
+        {
+            game.SaveWorld("save.txt");
+        });
+        loadButton.addActionListener(e ->
+        {
+            game.LoadWorld("save.txt");
+        });
     }
 
     public void DrawOrganisms()
@@ -109,11 +144,11 @@ public class GameUI
     public void WriteLogs()
     {
         ArrayList<String> logs = game.getWorld().getLogs();
-        StringBuilder text = new StringBuilder("<html>Logs:");
+        StringBuilder text = new StringBuilder("<html>");
 
         for (String str : logs)
         {
-            text.append("<br/>").append(str);
+            text.append(str).append("<br/>");
         }
         text.append("</html>");
 

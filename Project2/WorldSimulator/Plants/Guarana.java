@@ -18,7 +18,7 @@ public class Guarana extends Plant
     {
         super.Hit(attacker);
         attacker.setStrength(attacker.getStrength() + 3);
-        world.AddLog(this + " made " + attacker + " stronger [" + attacker.getStrength());
+        world.AddLog(this + " made " + attacker + " stronger [" + attacker.getStrength() + "]");
     }
 
     @Override

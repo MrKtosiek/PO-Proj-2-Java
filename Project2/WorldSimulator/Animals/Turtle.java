@@ -32,7 +32,7 @@ public class Turtle extends Animal
     {
         Random rand = new Random();
         if (rand.nextInt() % 4 == 0)
-            MoveTo(pos.GetNeighbor(rand.nextInt() % 4));
+            MoveTo(pos.GetNeighbor(rand.nextInt(4)));
         else
             world.AddLog(this + " stayed on " + pos);
     }
