@@ -169,79 +169,17 @@ public class Game
                 pos.y = scanner.nextInt();
                 strength = scanner.nextInt();
 
-                switch (symbol)
+                Organism newOrg = CreateOrganism(symbol, pos);
+                newOrg.strength = strength;
+
+                if (newOrg instanceof Human)
                 {
-                    case 'H' ->
-                    {
-                        Human newHuman = new Human(pos);
-                        int ability = scanner.nextInt();
-                        newHuman.setAbilityDurationLeft(ability);
-                        newHuman.strength = strength;
-                        player = newHuman;
-                        world.AddOrganism(newHuman);
-                    }
-                    case 'W' ->
-                    {
-                        Wolf newWolf = new Wolf(pos);
-                        newWolf.strength = strength;
-                        world.AddOrganism(newWolf);
-                    }
-                    case 'S' ->
-                    {
-                        Sheep newSheep = new Sheep(pos);
-                        newSheep.strength = strength;
-                        world.AddOrganism(newSheep);
-                    }
-                    case 'F' ->
-                    {
-                        Fox newFox = new Fox(pos);
-                        newFox.strength = strength;
-                        world.AddOrganism(newFox);
-                    }
-                    case 'T' ->
-                    {
-                        Turtle newTurtle = new Turtle(pos);
-                        newTurtle.strength = strength;
-                        world.AddOrganism(newTurtle);
-                    }
-                    case 'A' ->
-                    {
-                        Antelope newAntelope = new Antelope(pos);
-                        newAntelope.strength = strength;
-                        world.AddOrganism(newAntelope);
-                    }
-                    case ',' ->
-                    {
-                        Grass newGrass = new Grass(pos);
-                        newGrass.strength = strength;
-                        world.AddOrganism(newGrass);
-                    }
-                    case 'm' ->
-                    {
-                        Dandelion newDandelion = new Dandelion(pos);
-                        newDandelion.strength = strength;
-                        world.AddOrganism(newDandelion);
-                    }
-                    case 'g' ->
-                    {
-                        Guarana newGuarana = new Guarana(pos);
-                        newGuarana.strength = strength;
-                        world.AddOrganism(newGuarana);
-                    }
-                    case '?' ->
-                    {
-                        Belladonna newBelladonna = new Belladonna(pos);
-                        newBelladonna.strength = strength;
-                        world.AddOrganism(newBelladonna);
-                    }
-                    case '%' ->
-                    {
-                        Heracleum newHeracleum = new Heracleum(pos);
-                        newHeracleum.strength = strength;
-                        world.AddOrganism(newHeracleum);
-                    }
-                    default -> System.out.println("Unknown organism symbol '" + symbol + "'");
+                    int ability = scanner.nextInt();
+                    ((Human)newOrg).setAbilityDurationLeft(ability);
+                    player = (Human)newOrg;
                 }
+
+                world.AddOrganism(newOrg);
             }
 
             scanner.close();

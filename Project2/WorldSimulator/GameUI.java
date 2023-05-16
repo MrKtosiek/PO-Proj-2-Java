@@ -9,7 +9,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class GameUI
@@ -18,6 +20,7 @@ public class GameUI
     private JFrame frame;
     private JLabel[][] tiles;
     private JLabel logText;
+    private JFrame editPopup = null;
 
     private static final int tileSize = 20;
     private static final int margin = 10;
@@ -208,7 +211,11 @@ public class GameUI
 
     private void EditPopup(Vector2 pos)
     {
+        if (editPopup != null)
+            editPopup.dispose();
+
         JFrame popup = new JFrame("Edit");
+        editPopup = popup;
         popup.setLayout(null);
 
         Map<String, Character> options = new HashMap<>();
@@ -236,36 +243,39 @@ public class GameUI
         options.put(org.toString(), org.getSymbol());
         options.put("None", ' ');
 
-
-        JComboBox<String> dropdown = new JComboBox<>(options.keySet().toArray(new String[0]));
+        // create the dropdown
+        ArrayList<String> optionNames = new ArrayList<>(options.keySet().stream().toList());
+        Collections.sort(optionNames);
+        JComboBox<String> dropdown = new JComboBox<>(optionNames.toArray(new String[0]));
         dropdown.setBounds(margin, margin, buttonWidth, buttonHeight);
         popup.add(dropdown);
 
-        JButton button = new JButton("Confirm");
-        button.setAction(new AbstractAction()
+        // add a button to apply the edits
+        JButton button = new JButton("Apply");
+        button.addActionListener(e ->
         {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                World world = game.getWorld();
+            World world = game.getWorld();
 
-                Organism target = world.GetOrganism(pos);
-                if (target != null)
-                    world.RemoveOrganism(target);
+            Organism target = world.GetOrganism(pos);
+            if (target != null)
+                world.RemoveOrganism(target);
 
-                System.out.println("Adding organism " + options.get((String)dropdown.getSelectedItem()));
-                Organism newOrg = game.CreateOrganism(options.get((String)dropdown.getSelectedItem()), pos);
+            System.out.println("Adding organism " + options.get((String)dropdown.getSelectedItem()));
+            Organism newOrg = game.CreateOrganism(options.get((String)dropdown.getSelectedItem()), pos);
 
-                if (newOrg != null)
-                    world.AddOrganism(newOrg);
-                DrawOrganisms();
-            }
+            if (newOrg != null)
+                world.AddOrganism(newOrg);
+            DrawOrganisms();
+
+            popup.dispose();
+            editPopup = null;
         });
         button.setBounds(margin, margin * 2 + buttonHeight, buttonWidth, buttonHeight);
         popup.add(button);
 
-        popup.setPreferredSize(new Dimension(buttonWidth + 2 * margin,100));
+        popup.setPreferredSize(new Dimension(buttonWidth * 2 + margin * 2,buttonHeight * 2 + margin * 3 + 50));
         popup.pack();
+        popup.setFocusable(false);
         popup.setVisible(true);
     }
 
