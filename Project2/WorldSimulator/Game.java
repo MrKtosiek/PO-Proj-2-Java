@@ -11,9 +11,13 @@ public class Game
     private World world;
     private Human player;
 
-    public Game(int width, int height)
+    public Game(int width, int height, boolean hex)
     {
-        world = new World(width, height);
+        if (hex)
+            world = new HexWorld(width, height);
+        else
+            world = new GridWorld(width, height);
+
         player = new Human(new Vector2( width / 2, height / 2 ));
         world.AddOrganism(player);
         GenerateWorld();
@@ -104,13 +108,13 @@ public class Game
     }
     public void SaveWorld(String filename)
     {
-        System.out.println("Saving world state");
+        System.out.println("Saving world state...");
         try
         {
             FileWriter fileWriter = new FileWriter(filename);
 
             // save world stats
-            fileWriter.write(world.GetSize().x + " " + world.GetSize().y + " " + world.GetTurnNumber());
+            fileWriter.write((world instanceof HexWorld) + " " + world.GetSize().x + " " + world.GetSize().y + " " + world.GetTurnNumber());
             fileWriter.write(System.lineSeparator());
 
             // save the organisms
@@ -118,10 +122,8 @@ public class Game
             {
                 fileWriter.write(org.getSymbol() + " " + org.getPos().x + " " + org.getPos().y + " " + org.getStrength());
 
-                if (org instanceof Human){
-                    System.out.println("Writing human");
+                if (org instanceof Human)
                     fileWriter.write(" " + ((Human)org).getAbilityDurationLeft());
-                }
 
                 fileWriter.write(System.lineSeparator());
             }
@@ -138,33 +140,36 @@ public class Game
     }
     public void LoadWorld(String filename)
     {
-        System.out.println("Loading world state");
+        System.out.println("Loading world state...");
 
         try
         {
             File file = new File(filename);
             Scanner scanner = new Scanner(file);
+
+            boolean hex;
             Vector2 size = new Vector2();
             int turnNum;
+            hex = scanner.nextBoolean();
             size.x = scanner.nextInt();
             size.y = scanner.nextInt();
             turnNum = scanner.nextInt();
-            System.out.println("World stats: " + size.x + "," + size.y + " " + turnNum);
 
             // create a new world
-            world = new World(size.x, size.y);
+            if (hex)
+                world = new HexWorld(size.x, size.y);
+            else
+                world = new GridWorld(size.x, size.y);
             world.SetTurnNumber(turnNum);
 
             // load the organisms
             while (scanner.hasNext())
             {
-                System.out.println("Reading organism");
                 char symbol;
                 Vector2 pos = new Vector2();
                 int strength;
 
                 symbol = scanner.next().charAt(0);
-                System.out.println(symbol);
                 pos.x = scanner.nextInt();
                 pos.y = scanner.nextInt();
                 strength = scanner.nextInt();

@@ -22,7 +22,7 @@ public class Antelope extends Animal
         Random rand = new Random();
         if (rand.nextBoolean() && world.HasEmptyNeighbor(pos))
         {
-            MoveTo(world.GetEmptyNeighbor(pos));
+            MoveTo(world.GetRandomEmptyNeighbor(pos));
             return;
         }
         super.Hit(attacker);
@@ -35,7 +35,7 @@ public class Antelope extends Animal
         Vector2 target = pos;
         for (int i = 0; i < motionRange; i++)
         {
-            target = target.GetNeighbor(rand.nextInt(4));
+            target = world.GetRandomNeighbor(target);
         }
         MoveTo(target);
     }

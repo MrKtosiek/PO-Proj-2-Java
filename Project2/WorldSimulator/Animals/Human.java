@@ -1,6 +1,7 @@
 package WorldSimulator.Animals;
 
 import WorldSimulator.Animal;
+import WorldSimulator.HexWorld;
 import WorldSimulator.Organism;
 import WorldSimulator.Vector2;
 
@@ -16,6 +17,8 @@ public class Human extends Animal
         DOWN,
         LEFT,
         RIGHT,
+        UP_LEFT,
+        DOWN_RIGHT,
         ABILITY
     };
     HumanAction nextAction = HumanAction.NONE;
@@ -57,14 +60,31 @@ public class Human extends Animal
 
     public void setNextAction(int keyCode)
     {
-        switch (keyCode)
+        if (world instanceof HexWorld)
         {
-            case KeyEvent.VK_W -> nextAction = HumanAction.UP;
-            case KeyEvent.VK_S -> nextAction = HumanAction.DOWN;
-            case KeyEvent.VK_A -> nextAction = HumanAction.LEFT;
-            case KeyEvent.VK_D -> nextAction = HumanAction.RIGHT;
-            case KeyEvent.VK_R -> nextAction = HumanAction.ABILITY;
-            default -> nextAction = HumanAction.NONE;
+            switch (keyCode)
+            {
+                case KeyEvent.VK_E -> nextAction = HumanAction.UP;
+                case KeyEvent.VK_Z -> nextAction = HumanAction.DOWN;
+                case KeyEvent.VK_A -> nextAction = HumanAction.LEFT;
+                case KeyEvent.VK_D -> nextAction = HumanAction.RIGHT;
+                case KeyEvent.VK_W -> nextAction = HumanAction.UP_LEFT;
+                case KeyEvent.VK_X -> nextAction = HumanAction.DOWN_RIGHT;
+                case KeyEvent.VK_R -> nextAction = HumanAction.ABILITY;
+                default -> nextAction = HumanAction.NONE;
+            }
+        }
+        else
+        {
+            switch (keyCode)
+            {
+                case KeyEvent.VK_W -> nextAction = HumanAction.UP;
+                case KeyEvent.VK_S -> nextAction = HumanAction.DOWN;
+                case KeyEvent.VK_A -> nextAction = HumanAction.LEFT;
+                case KeyEvent.VK_D -> nextAction = HumanAction.RIGHT;
+                case KeyEvent.VK_R -> nextAction = HumanAction.ABILITY;
+                default -> nextAction = HumanAction.NONE;
+            }
         }
     }
 
@@ -106,6 +126,10 @@ public class Human extends Animal
             target = new Vector2( pos.x, pos.y - 1 );
         if (nextAction == HumanAction.RIGHT)
             target = new Vector2( pos.x, pos.y + 1 );
+        if (nextAction == HumanAction.UP_LEFT)
+            target = new Vector2( pos.x - 1, pos.y - 1 );
+        if (nextAction == HumanAction.DOWN_RIGHT)
+            target = new Vector2( pos.x + 1, pos.y + 1 );
 
         MoveTo(target);
     }
@@ -115,7 +139,7 @@ public class Human extends Animal
     {
         if (IsAbilityActive() && world.HasEmptyNeighbor(pos))
         {
-            attacker.setPos(world.GetEmptyNeighbor(pos));
+            attacker.setPos(world.GetRandomEmptyNeighbor(pos));
             world.AddLog(this + " deflected an attack from " + attacker + " on " + pos + " using the special ability\n");
         }
         else

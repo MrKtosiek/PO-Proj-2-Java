@@ -21,7 +21,7 @@ public class Fox extends Animal
         Random rand = new Random();
         for (int i = 0; i < 3; i++)
         {
-            Vector2 target = pos.GetNeighbor(rand.nextInt(4));
+            Vector2 target = world.GetRandomNeighbor(pos);
             Organism org = world.GetOrganism(target);
 
             if (org == null || getStrength() >= org.getStrength())

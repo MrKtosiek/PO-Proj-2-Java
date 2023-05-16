@@ -33,7 +33,7 @@ public abstract class Plant extends Organism
     {
         if (world.HasEmptyNeighbor(pos))
         {
-            Vector2 childPos = world.GetEmptyNeighbor(pos);
+            Vector2 childPos = world.GetRandomEmptyNeighbor(pos);
             Plant child = (Plant) clone();
             child.pos = childPos;
             world.AddOrganism(child);

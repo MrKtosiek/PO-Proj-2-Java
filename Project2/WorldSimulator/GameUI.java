@@ -5,13 +5,11 @@ import WorldSimulator.Plants.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class GameUI
@@ -39,12 +37,16 @@ public class GameUI
     private void CreateWindow(String title)
     {
         // create the window
-        frame = new JFrame();
-        frame.setTitle(title);
+        frame = new JFrame(title);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setPreferredSize(new Dimension(
-                game.getWorld().GetSize().y * tileSize + logWidth + margin * 3,
-                Math.max(game.getWorld().GetSize().x * tileSize, logHeight) + margin * 2 + buttonHeight + 50));
+        if (game.getWorld() instanceof HexWorld)
+            frame.setPreferredSize(new Dimension(
+                    game.getWorld().GetSize().y * tileSize + logWidth + margin * 3 + game.getWorld().GetSize().x * tileSize / 2,
+                    Math.max(game.getWorld().GetSize().x * tileSize, logHeight) + margin * 2 + buttonHeight + 50));
+        else
+            frame.setPreferredSize(new Dimension(
+                    game.getWorld().GetSize().y * tileSize + logWidth + margin * 3,
+                    Math.max(game.getWorld().GetSize().x * tileSize, logHeight) + margin * 2 + buttonHeight + 50));
 
         // create a container for the UI elements
         JPanel container = new JPanel();
@@ -58,6 +60,7 @@ public class GameUI
 
         // display the window
         frame.pack();
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
         frame.addKeyListener(new GameController(game, this));
@@ -72,7 +75,11 @@ public class GameUI
         tiles = new JLabel[worldSize.x][worldSize.y];
         JPanel grid = new JPanel();
         grid.setLayout(null);
-        grid.setBounds(margin, buttonHeight + margin, worldSize.y * tileSize, worldSize.x * tileSize);
+
+        if (game.getWorld() instanceof HexWorld)
+            grid.setBounds(margin, buttonHeight + margin, worldSize.y * tileSize + worldSize.x * tileSize / 2, worldSize.x * tileSize);
+        else
+            grid.setBounds(margin, buttonHeight + margin, worldSize.y * tileSize, worldSize.x * tileSize);
 
         for (int x = 0; x < worldSize.x; x++)
         {
@@ -89,7 +96,18 @@ public class GameUI
     private JLabel CreateTile(int x, int y)
     {
         JLabel label = new JLabel(" ");
-        label.setBounds(y * tileSize, x * tileSize, tileSize, tileSize);
+        Vector2 tilePos = new Vector2();
+        if (game.getWorld() instanceof HexWorld)
+        {
+            tilePos.x = y * tileSize + (game.getWorld().GetSize().x * tileSize - (x * tileSize)) / 2;
+            tilePos.y = x * tileSize;
+        }
+        else
+        {
+            tilePos.x = y * tileSize;
+            tilePos.y = x * tileSize;
+        }
+        label.setBounds(tilePos.x, tilePos.y, tileSize, tileSize);
         label.setHorizontalAlignment(JLabel.CENTER);
         label.setOpaque(true);
         label.setBackground(Color.LIGHT_GRAY);
@@ -141,7 +159,21 @@ public class GameUI
 
         JScrollPane sp = new JScrollPane(log);
         sp.setBorder(BorderFactory.createTitledBorder("Logs"));
-        sp.setBounds(game.getWorld().GetSize().y * tileSize + 2 * margin, buttonHeight + margin, logWidth, logHeight);
+        sp.getVerticalScrollBar().setUnitIncrement(10);
+
+        if (game.getWorld() instanceof HexWorld)
+            sp.setBounds(
+                    game.getWorld().GetSize().y * tileSize + game.getWorld().GetSize().x * tileSize / 2 + 2 * margin,
+                    buttonHeight + margin,
+                    logWidth,
+                    logHeight);
+        else
+            sp.setBounds(
+                    game.getWorld().GetSize().y * tileSize + 2 * margin,
+                    buttonHeight + margin,
+                    logWidth,
+                    logHeight);
+
         sp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         sp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
@@ -273,8 +305,10 @@ public class GameUI
         button.setBounds(margin, margin * 2 + buttonHeight, buttonWidth, buttonHeight);
         popup.add(button);
 
+        // display the window
         popup.setPreferredSize(new Dimension(buttonWidth * 2 + margin * 2,buttonHeight * 2 + margin * 3 + 50));
         popup.pack();
+        popup.setLocationRelativeTo(null);
         popup.setFocusable(false);
         popup.setVisible(true);
     }

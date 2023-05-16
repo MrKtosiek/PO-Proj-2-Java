@@ -1,6 +1,7 @@
 package WorldSimulator;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Random;
 
 public abstract class Animal extends Organism
@@ -25,7 +26,9 @@ public abstract class Animal extends Organism
     protected void Movement()
     {
         Random rand = new Random();
-        MoveTo(pos.GetNeighbor(rand.nextInt(4)));
+        ArrayList<Vector2> neighbors = world.GetNeighbors(pos);
+        MoveTo(neighbors.get(rand.nextInt(neighbors.size())));
+        //MoveTo(pos.GetNeighbor(rand.nextInt(4)));
     }
 
     protected void MoveTo(Vector2 target)
@@ -70,7 +73,7 @@ public abstract class Animal extends Organism
             return;
         }
 
-        Vector2 childPos = world.GetEmptyNeighbor(other.getPos());
+        Vector2 childPos = world.GetRandomEmptyNeighbor(other.getPos());
         Animal child = (Animal)clone();
         child.pos = childPos;
         world.AddOrganism(child);

@@ -2,30 +2,20 @@ package WorldSimulator;
 
 import java.util.*;
 
-public class World
+public abstract class World
 {
 
     private final Vector2 size;
-    private Vector<Organism> organisms = new Vector<>();
+    private final Vector<Organism> organisms = new Vector<>();
     private int turnNumber = 0;
     private boolean playerAlive = true;
-    private ArrayList<String> logs = new ArrayList<>();
+    private final ArrayList<String> logs = new ArrayList<>();
 
-    public World()
-    {
-        this(15, 15);
-    }
     public World(int width, int height)
     {
         size = new Vector2(width, height);
     }
-    public World(World orig)
-    {
-        size = orig.size;
-        turnNumber = orig.turnNumber;
-        playerAlive = orig.playerAlive;
-        organisms = new Vector<>(orig.organisms);
-    }
+
 
     public void AddOrganism(Organism org)
     {
@@ -112,23 +102,31 @@ public class World
         return pos;
     }
 
+    public abstract ArrayList<Vector2> GetNeighbors(Vector2 v);
+    public abstract ArrayList<Vector2> GetNeighborsWithDiagonals(Vector2 v);
+    public Vector2 GetRandomNeighbor(Vector2 pos)
+    {
+        Random rand = new Random();
+        ArrayList<Vector2> neighbors = GetNeighbors(pos);
+        return neighbors.get(rand.nextInt(neighbors.size()));
+    }
     public boolean HasEmptyNeighbor(Vector2 pos)
     {
-        for (int i = 0; i < 4; i++)
+        ArrayList<Vector2> neighbors = GetNeighbors(pos);
+        for (Vector2 n : neighbors)
         {
-            Vector2 n = pos.GetNeighbor(i);
             if (ContainsPos(n) && GetOrganism(n) == null)
                 return true;
         }
         return false;
     }
-
-    public Vector2 GetEmptyNeighbor(Vector2 pos)
+    public Vector2 GetRandomEmptyNeighbor(Vector2 pos)
     {
         Vector<Vector2> targets = new Vector<>();
-        for (int i = 0; i < 4; i++)
+
+        ArrayList<Vector2> neighbors = GetNeighbors(pos);
+        for (Vector2 n : neighbors)
         {
-            Vector2 n = pos.GetNeighbor(i);
             if (ContainsPos(n) && GetOrganism(n) == null)
                 targets.add(n);
         }
@@ -139,7 +137,7 @@ public class World
             return targets.get(rand.nextInt(targets.size()));
         }
         else
-            return new Vector2( -1,-1 );
+            return null;
     }
 
     public void ExecuteTurn()

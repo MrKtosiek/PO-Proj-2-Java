@@ -27,7 +27,7 @@ public class Vector2
         return this;
     }
 
-    public Vector2 GetNeighbor8Way(int i)
+    public Vector2 GetNeighborWithDiagonals(int i)
     {
         if (i == 0) return new Vector2( x - 1, y - 1 );
         if (i == 1) return new Vector2( x - 1, y     );

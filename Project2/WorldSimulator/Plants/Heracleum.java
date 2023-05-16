@@ -6,6 +6,7 @@ import WorldSimulator.Plant;
 import WorldSimulator.Vector2;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 public class Heracleum extends Plant
 {
@@ -19,9 +20,9 @@ public class Heracleum extends Plant
     {
         super.Action();
 
-        for (int i = 0; i < 8; i++)
+        ArrayList<Vector2> targets = world.GetNeighborsWithDiagonals(pos);
+        for (Vector2 target : targets)
         {
-            Vector2 target = pos.GetNeighbor8Way(i);
             Organism org = world.GetOrganism(target);
             if (org instanceof Animal)
             {
