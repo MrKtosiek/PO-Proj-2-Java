@@ -1,4 +1,6 @@
-package WorldSimulator;
+package WorldSimulator.UI;
+
+import WorldSimulator.Vector2;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;

@@ -2,6 +2,9 @@ package WorldSimulator;
 
 import WorldSimulator.Animals.*;
 import WorldSimulator.Plants.*;
+import WorldSimulator.UI.GameUI;
+import WorldSimulator.UI.GridGameUI;
+import WorldSimulator.UI.HexGameUI;
 
 import java.io.*;
 import java.util.Scanner;
@@ -10,6 +13,7 @@ public class Game
 {
     private World world;
     private Human player;
+    private GameUI gameUI;
 
     public Game(int width, int height, boolean hex)
     {
@@ -27,10 +31,10 @@ public class Game
     {
         return world;
     }
-
-    public Human getPlayer()
+    public void setGameUI(GameUI gameUI)
     {
-        return player;
+        this.gameUI = gameUI;
+        gameUI.DrawOrganisms();
     }
 
     public void GenerateWorld()
@@ -156,10 +160,15 @@ public class Game
             turnNum = scanner.nextInt();
 
             // create a new world
-            if (hex)
+            if (hex){
                 world = new HexWorld(size.x, size.y);
-            else
+                gameUI = new HexGameUI(this, "Filip Jezierski 196333");
+            }
+            else{
                 world = new GridWorld(size.x, size.y);
+                gameUI = new GridGameUI(this, "Filip Jezierski 196333");
+
+            }
             world.SetTurnNumber(turnNum);
 
             // load the organisms
@@ -197,6 +206,7 @@ public class Game
             e.printStackTrace();
         }
 
+        gameUI.DrawOrganisms();
     }
 
 

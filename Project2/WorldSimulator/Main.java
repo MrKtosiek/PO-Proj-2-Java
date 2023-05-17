@@ -1,5 +1,9 @@
 package WorldSimulator;
 
+import WorldSimulator.UI.GridGameUI;
+import WorldSimulator.UI.HexGameUI;
+import WorldSimulator.UI.StartMenu;
+
 public class Main
 {
     public static void main(String[] args)
@@ -10,9 +14,12 @@ public class Main
             Vector2 worldSize = startMenu.getWorldSize();
 
             Game game = new Game(worldSize.x, worldSize.y, startMenu.isHexChecked());
-            GameUI gameUI = new GameUI(game, "Filip Jezierski 196333");
+            if (startMenu.isHexChecked())
+                game.setGameUI(new HexGameUI(game, "Filip Jezierski 196333"));
+            else
+                game.setGameUI(new GridGameUI(game, "Filip Jezierski 196333"));
 
-            gameUI.DrawOrganisms();
+            startMenu.dispose();
         });
     }
 }

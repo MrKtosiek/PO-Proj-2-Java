@@ -1,5 +1,6 @@
-package WorldSimulator;
+package WorldSimulator.UI;
 
+import WorldSimulator.*;
 import WorldSimulator.Animals.*;
 import WorldSimulator.Plants.*;
 
@@ -12,20 +13,20 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GameUI
+public abstract class GameUI
 {
-    private final Game game;
-    private JFrame frame;
-    private JLabel[][] tiles;
+    protected final Game game;
+    protected JFrame frame;
+    protected JLabel[][] tiles;
     private JLabel logText;
     private JFrame editPopup = null;
 
-    private static final int tileSize = 20;
-    private static final int margin = 10;
+    protected static final int tileSize = 20;
+    protected static final int margin = 10;
     private static final int logWidth = 350;
     private static final int logHeight = 400;
-    private static final int buttonHeight = 20;
-    private static final int buttonWidth = 100;
+    protected static final int buttonHeight = 20;
+    protected static final int buttonWidth = 100;
 
     public GameUI(Game game, String title)
     {
@@ -39,14 +40,10 @@ public class GameUI
         // create the window
         frame = new JFrame(title);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        if (game.getWorld() instanceof HexWorld)
-            frame.setPreferredSize(new Dimension(
-                    game.getWorld().GetSize().y * tileSize + logWidth + margin * 3 + game.getWorld().GetSize().x * tileSize / 2,
-                    Math.max(game.getWorld().GetSize().x * tileSize, logHeight) + margin * 2 + buttonHeight + 50));
-        else
-            frame.setPreferredSize(new Dimension(
-                    game.getWorld().GetSize().y * tileSize + logWidth + margin * 3,
-                    Math.max(game.getWorld().GetSize().x * tileSize, logHeight) + margin * 2 + buttonHeight + 50));
+
+        frame.setPreferredSize(new Dimension(
+                GetBoardWidth() + logWidth + margin * 3,
+                Math.max(GetBoardHeight(), logHeight) + margin * 2 + buttonHeight + 50));
 
         // create a container for the UI elements
         JPanel container = new JPanel();
@@ -73,13 +70,10 @@ public class GameUI
         // create the tiles
         Vector2 worldSize = game.getWorld().GetSize();
         tiles = new JLabel[worldSize.x][worldSize.y];
+
         JPanel grid = new JPanel();
         grid.setLayout(null);
-
-        if (game.getWorld() instanceof HexWorld)
-            grid.setBounds(margin, buttonHeight + margin, worldSize.y * tileSize + worldSize.x * tileSize / 2, worldSize.x * tileSize);
-        else
-            grid.setBounds(margin, buttonHeight + margin, worldSize.y * tileSize, worldSize.x * tileSize);
+        grid.setBounds(margin, buttonHeight + margin, GetBoardWidth(), GetBoardHeight());
 
         for (int x = 0; x < worldSize.x; x++)
         {
@@ -96,17 +90,7 @@ public class GameUI
     private JLabel CreateTile(int x, int y)
     {
         JLabel label = new JLabel(" ");
-        Vector2 tilePos = new Vector2();
-        if (game.getWorld() instanceof HexWorld)
-        {
-            tilePos.x = y * tileSize + (game.getWorld().GetSize().x * tileSize - (x * tileSize)) / 2;
-            tilePos.y = x * tileSize;
-        }
-        else
-        {
-            tilePos.x = y * tileSize;
-            tilePos.y = x * tileSize;
-        }
+        Vector2 tilePos = GetTilePos(x, y);
         label.setBounds(tilePos.x, tilePos.y, tileSize, tileSize);
         label.setHorizontalAlignment(JLabel.CENTER);
         label.setOpaque(true);
@@ -161,18 +145,11 @@ public class GameUI
         sp.setBorder(BorderFactory.createTitledBorder("Logs"));
         sp.getVerticalScrollBar().setUnitIncrement(10);
 
-        if (game.getWorld() instanceof HexWorld)
-            sp.setBounds(
-                    game.getWorld().GetSize().y * tileSize + game.getWorld().GetSize().x * tileSize / 2 + 2 * margin,
-                    buttonHeight + margin,
-                    logWidth,
-                    logHeight);
-        else
-            sp.setBounds(
-                    game.getWorld().GetSize().y * tileSize + 2 * margin,
-                    buttonHeight + margin,
-                    logWidth,
-                    logHeight);
+        sp.setBounds(
+                GetBoardWidth() + 2 * margin,
+                buttonHeight + margin,
+                logWidth,
+                logHeight);
 
         sp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         sp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -200,8 +177,6 @@ public class GameUI
             game.LoadWorld("save.txt");
             String title = frame.getTitle();
             frame.dispose();
-            CreateWindow(title);
-            DrawOrganisms();
         });
     }
 
@@ -221,8 +196,9 @@ public class GameUI
 
         for (Organism org : game.getWorld().GetOrganisms())
         {
-            tiles[org.pos.x][org.pos.y].setText("" + org.getSymbol());
-            tiles[org.pos.x][org.pos.y].setBackground(org.getColor());
+            Vector2 pos = org.getPos();
+            tiles[pos.x][pos.y].setText("" + org.getSymbol());
+            tiles[pos.x][pos.y].setBackground(org.getColor());
         }
     }
     public void WriteLogs()
@@ -313,4 +289,8 @@ public class GameUI
         popup.setVisible(true);
     }
 
+
+    protected abstract int GetBoardWidth();
+    protected abstract int GetBoardHeight();
+    protected abstract Vector2 GetTilePos(int x, int y);
 }
